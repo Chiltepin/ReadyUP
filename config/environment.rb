@@ -11,7 +11,15 @@ configure :development do
   DataMapper::Logger.new($stdout, :debug)
 
   # Use SQLite
-  DataMapper.setup(:default, "sqlite:///#{Dir.pwd}/db/app-dev.sqlite")
+ # DataMapper.setup(:default, "sqlite:///#{Dir.pwd}/db/app-dev.sqlite")
+  DataMapper.setup(:default,{
+      :adapter => 'postgres',
+      :host => 'ec2-54-228-213-42.eu-west-1.compute.amazonaws.com',
+      :database => 'd7s4trlkkd6pov',
+      :user => 'yfpaornpsvyzxt',
+      :password => '7yM1N7m397UlVDlAyEOzwiO805'
+  })
+
 
   # Enable pretty printing of Slim-generated HTML (for debugging)
   Slim::Engine.set_options pretty: true, sort_attrs: false
@@ -26,7 +34,14 @@ configure :production do
   puts "******************"
 
   # Use Postgresql
-  DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://localhost/mydb')
+ # DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://localhost/mydb')
+  DataMapper.setup(:default,{
+      :adapter => 'postgres',
+      :host => 'ec2-54-228-213-42.eu-west-1.compute.amazonaws.com',
+      :database => 'd7s4trlkkd6pov',
+      :user => 'yfpaornpsvyzxt',
+      :password => '7yM1N7m397UlVDlAyEOzwiO805'
+  })
 
 end
 
