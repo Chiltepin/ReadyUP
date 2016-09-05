@@ -18,6 +18,7 @@ gem 'sinatra-redirect-with-flash'
 gem 'thin'
 gem 'em-hiredis'
 gem 'bson_ext'
+gem 'rake'
 gem 'eventmachine'
 
 group :test do
