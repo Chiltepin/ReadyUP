@@ -1,6 +1,5 @@
 source 'http://rubygems.org'
 ruby '2.3.0'
-gem 'sqlite3'
 gem 'sinatra'
 gem 'sinatra-partial'
 gem 'data_mapper'
