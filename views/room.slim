@@ -184,6 +184,12 @@ section#room.bg-primary
               tr
                 td
                   input type='submit' id='checkin_button' class="btn btn-primary btn-x page-scroll" form="check_in" value='Check in!'
+      #roominfo
+        h3 Room info
+        h4 #{@room.game}
+        h4 #{@room.language}
+        h4 #{@room.alert_sound}
+        h4 #{@room.background}
       - if session[:member] == true && RoomUser.first(room_id: @room.id, user_id: (User.first(login_key: session[:login_key])).id) != nil
         form action='/room/checkout/#{@room.url}' method='get' id="check_out"
           table#check_out
@@ -200,14 +206,14 @@ section#room.bg-primary
             option value="news.mp3"  News
             option value="bell.mp3"  Bell
 
-          input class="btn btn-primary btn-x page-scroll" type="submit" id="submit"
+          input class="btn btn-primary btn-x page-scroll" type="submit" id="submit" onclick="sendmessage('alert sound')"
         h5 Background image:
         form action='/change_background/#{@room.id}' method='post'
           select class="btn btn-default btn-sm dropdown-toggle" name='audio' id='audio'
             option value="footer_lodyas.png"  Default
             option value="triangular.png" Triangular
             option value="escheresque_ste.png"  Escheresque
-          input class="btn btn-primary btn-x page-scroll" type="submit" id="submit"
+          input class="btn btn-primary btn-x page-scroll" type="submit" id="submit" onclick="sendmessage('background')"
     .container id="roomcontainer"
       table#members.display
         thead

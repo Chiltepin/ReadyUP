@@ -8,6 +8,8 @@
   $chat_online = false
 
 class App < Sinatra::Base
+
+
   enable :sessions
   require 'rack-flash'
   require 'pp'
@@ -86,6 +88,7 @@ class App < Sinatra::Base
     if $channels.fetch(url) { nil} == nil
       $channels[url] = EM::Channel.new
     end
+
     session[:room] = url
     $usersroom = session[:room]
     $loginkey = session[:login_key]
@@ -120,12 +123,20 @@ class App < Sinatra::Base
     redirect_url = RoomUser.checkin(params, url, self)
     @room_user = RoomUser.first(room_id: room.id, user_id: (User.first(login_key: session[:login_key])).id)
 =begin
+    $main_channel.push "MEGA CHECK"
+=end
+    p $channels[("#{$ids_in_room.fetch($id_to_sessid.key(session[:login_key]))}")]
+    p "sdadwddadawX"
+    $channels[("#{$ids_in_room.fetch($id_to_sessid.key(session[:login_key]))}")].push "#{session[:alias]} Checked in"
+
+=begin
     @room_user.timezone_offset
 =end
 
     redirect redirect_url ||= back
   end
   get '/room/checkout/:url' do |url|
+    $channels[("#{$ids_in_room.fetch($id_to_sessid.key(session[:login_key]))}")].push "#{session[:alias]} Checked out"
     RoomUser.checkout(url, self)
     redirect redirect_url ||= back
   end
@@ -169,6 +180,7 @@ class App < Sinatra::Base
   end
   post '/change_background/:id' do |id|
     @room = Room.first(id: id)
+    puts "Room id #{id} changed background to #{params}"
     @room.change_background(params, self)
     redirect back
   end
@@ -191,10 +203,12 @@ class App < Sinatra::Base
   end
 end
 def chat
-  EventMachine::WebSocket.start(:host => '0.0.0.0', :port => 2000,:debug => true) do |ws|
+
+  EventMachine::WebSocket.start(:host => '0.0.0.0', :port => 9292,:debug => true) do |ws|
     $chat_online = true
     if $name
       ws.onopen {
+
 =begin //Alpha version of attempt to fix multiple tab related bugs
         if $sessionid_to_room.has_key?($loginkey) == true && $sessionid_to_room.has_value?($usersroom) == true
           p "_________x___________"
@@ -209,9 +223,15 @@ def chat
         $sessionid_to_room[$id_to_sessid[mainchannel_id]] = $ids_in_room[mainchannel_id] = "#{$usersroom}"
         name = "#{$id_to_name.fetch(mainchannel_id)}"
         id = $channels[("#{$ids_in_room.fetch(mainchannel_id)}")].subscribe{ |msg| ws.send msg }
-        if RoomUser.first(user_id: (User.first(login_key: $id_to_sessid.fetch(mainchannel_id){}).id), room_id: (Room.first(url: $ids_in_room.fetch(mainchannel_id)).id))
-          $channels[("#{$ids_in_room.fetch(mainchannel_id)}")].push "#{name} Checked in"
+        usern = User.first(login_key: $id_to_sessid.fetch(mainchannel_id){})
+        roomn = Room.first(url: $ids_in_room.fetch(mainchannel_id))
+=begin
+        if usern != nil && roomn != nil
+          if RoomUser.first(user_id: usern.id, room_id: roomn.id)
+            $channels[("#{$ids_in_room.fetch(mainchannel_id)}")].push "#{name} Checked in"
+          end
         end
+=end
 
         ws.onmessage { |msg|
           if $channels[("#{$ids_in_room.fetch(mainchannel_id)}")]
@@ -223,19 +243,22 @@ def chat
             end
           end
         }
-
-        if RoomUser.first(user_id: (User.first(login_key: $id_to_sessid.fetch(mainchannel_id)).id), room_id: (Room.first(url: $ids_in_room.fetch(mainchannel_id)).id))
-          ws.onclose {
-            $channels[("#{$ids_in_room.fetch(mainchannel_id)}")].push "#{$id_to_name.fetch(mainchannel_id)} Checked out"
+        if usern && roomn != nil
+          if RoomUser.first(user_id: usern.id, room_id: roomn.id)
+            ws.onclose {
 =begin
-            userroom = RoomUser.first(user_id: (User.first(login_key: $id_to_sessid.fetch(mainchannel_id)).id), room_id: (Room.first(url: $ids_in_room.fetch(mainchannel_id)).id))
-            userroom.destroy! if userroom != nil
+              $channels[("#{$ids_in_room.fetch(mainchannel_id)}")].push "#{$id_to_name.fetch(mainchannel_id)} Checked out"
 =end
-            $channels[("#{$ids_in_room.fetch(mainchannel_id)}")].unsubscribe(id)
-            $main_channel.unsubscribe(mainchannel_id)
-            $sessionid_to_room.delete($id_to_sessid[mainchannel_id])
+=begin
+              userroom = RoomUser.first(user_id: (User.first(login_key: $id_to_sessid.fetch(mainchannel_id)).id), room_id: (Room.first(url: $ids_in_room.fetch(mainchannel_id)).id))
+              userroom.destroy! if userroom != nil
+=end
+              $channels[("#{$ids_in_room.fetch(mainchannel_id)}")].unsubscribe(id)
+              $main_channel.unsubscribe(mainchannel_id)
+              $sessionid_to_room.delete($id_to_sessid[mainchannel_id])
 
-          }
+            }
+          end
         end
       }
     end

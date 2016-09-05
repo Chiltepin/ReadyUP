@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-ruby '2.1.0'
+ruby '2.3.0'
 gem 'sqlite3'
 gem 'sinatra'
 gem 'sinatra-partial'
@@ -18,6 +18,7 @@ gem 'sinatra-redirect-with-flash'
 gem 'thin'
 gem 'em-hiredis'
 gem 'bson_ext'
+gem 'eventmachine'
 
 group :test do
   gem 'rspec'

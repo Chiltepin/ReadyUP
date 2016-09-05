@@ -9,6 +9,8 @@ class RoomUser
   belongs_to :user
 
   def check_time
+    p self.ready_until.strftime("%d:%H:%M")
+    p  DateTime.now.strftime("%d:%H:%M")
     if self.ready_until.strftime("%d:%H:%M") <= DateTime.now.strftime("%d:%H:%M")
       self.destroy
     end

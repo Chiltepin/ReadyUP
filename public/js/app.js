@@ -1,12 +1,16 @@
 $(function(){
-    ws = new WebSocket("ws://0.0.0.0:2000");
+    ws = new WebSocket("ws:0.0.0.0:9292");
     ws.onmessage = function(evt) {
-        console.log(evt.data)
+
         if( evt.data.indexOf('Checked') >= 0){
-            console.log('Refreshed members')
+
             $("table#titletable").load(location.href + " table#titletable");
             $("table#members").load(location.href + " table#members");
 
+        }
+        if( evt.data.indexOf('updated') >= 0){
+            console.log('Refreshed background')
+            location.reload(true)
         }
         if ($('#chat tbody tr:last').length > 0){
             $('#chat tbody tr:last').after('<tr><td>' + evt.data + '</td></tr>');
@@ -15,6 +19,11 @@ $(function(){
             $('#chat tbody').append('<tr><td>' + evt.data + '</td></tr>');
         }
     };
+
+    sendmessage = function(action){
+        ws.send( "The "+ action + " has been updated")
+        console.log('Updated room settings')
+    }
 
   /*  ws.onclose = function() {
 
@@ -62,6 +71,8 @@ $(function(){
         console.log('Timed refresh')
     }, 180000);
 
+
+
     fullroom = function(runs) {
         if (window.currentusers === window.roomsize && runs === 0) {
             document.getElementById('siren').play();
@@ -72,6 +83,7 @@ $(function(){
     };
 
 }).call(this);
+
 
 /*
 window.addEventListener("beforeunload", function (e) {
