@@ -135,6 +135,7 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rake (11.2.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -196,6 +197,7 @@ DEPENDENCIES
   omniauth-openid
   omniauth-steam
   rack-flash3
+  rake
   rspec
   selenium-webdriver
   sinatra
