@@ -4,6 +4,7 @@ gem 'sinatra'
 gem 'sinatra-partial'
 gem 'data_mapper'
 gem 'dm-sqlite-adapter', :group => :development
+gem 'dm-postgres-adapter'
 gem 'slim'
 gem 'tilt', '~> 1.4.1' #temporary fix
 gem 'omniauth-openid'
