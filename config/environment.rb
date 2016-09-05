@@ -27,7 +27,8 @@ configure :production do
   puts "******************"
 
   # Use Postgresql
-  DataMapper.setup(:default, ENV['postgres://yfpaornpsvyzxt:7yM1N7m397UlVDlAyEOzwiO805@ec2-54-228-213-42.eu-west-1.compute.amazonaws.com:5432/d7s4trlkkd6pov'] || 'postgres://yfpaornpsvyzxt:7yM1N7m397UlVDlAyEOzwiO805@ec2-54-228-213-42.eu-west-1.compute.amazonaws.com/[heroku-postgres-e4b08a69]')
+  DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://yfpaornpsvyzxt:7yM1N7m397UlVDlAyEOzwiO805@ec2-54-228-213-42.eu-west-1.compute.amazonaws.com:5432/d7s4trlkkd6pov
+')
 
 end
 
