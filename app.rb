@@ -204,7 +204,7 @@ class App < Sinatra::Base
 end
 def chat
 
-  EventMachine::WebSocket.start(:host => '0.0.0.0', :port => 9292,:debug => true) do |ws|
+  EventMachine::WebSocket.start(:host => '127.0.0.1', :port => 9292,:debug => true) do |ws|
     $chat_online = true
     if $name
       ws.onopen {

@@ -1,5 +1,5 @@
 $(function(){
-    ws = new WebSocket("ws:0.0.0.0:9292");
+    ws = new WebSocket("ws:127.0.0.1:9292");
     ws.onmessage = function(evt) {
 
         if( evt.data.indexOf('Checked') >= 0){
